@@ -1,0 +1,23 @@
+{
+  "name": "storage-api",
+  "version": "1.0.0",
+  "description": "storage-api",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/InitialWorldTeam/storage-api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/InitialWorldTeam/storage-api/issues"
+  },
+  "homepage": "https://github.com/InitialWorldTeam/storage-api#readme",
+  "dependencies": {
+    "axios": "^0.24.0",
+    "form-data": "^4.0.0"
+  }
+}
