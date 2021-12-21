@@ -2,10 +2,12 @@ var axios = require('axios');
 var FormData = require('form-data');
 var fs = require('fs');
 var path = require('path');
+var querystring= require('querystring');
+const string2fileStream = require('string-to-file-stream');
 
 exports.upfile = function(host, fname, res) {
 	var data = new FormData();
-	data.append('filese', fs.createReadStream(fname));
+	data.append('', fs.createReadStream(fname));
 
 	var config = {
 		method: 'post',
@@ -32,10 +34,6 @@ function getAllFiles(dirPath, originalPath, originalPath2, arrayOfFiles) {
 	originalPath2 = originalPath2 || path.resolve(dirPath, ".")
 
 	folder = path.relative(originalPath, path.join(dirPath, "/"))
-
-	//arrayOfFiles.push({
-	//    path: folder.replace(/\\/g, "/"),
-	//})
 
 	files.forEach(function (file) {
 		if (fs.statSync(dirPath + "/" + file).isDirectory()) {
@@ -73,6 +71,28 @@ exports.upfolder = function(host, fpath, res) {
 		url: `${host}/api/v1/folder`,
 		headers: { 
 			folder: ofolder,
+			...data.getHeaders()
+		},
+		data : data
+	};
+
+	axios(config)
+		.then(res)
+		.catch(function (error) {
+			throw new Error(error)
+		});
+}
+
+exports.upDataAsFile = function(host, fname, jsdata, res) {
+	let result = querystring.stringify(jsdata);
+	let s = string2fileStream(result, {path:fname});
+	var data = new FormData();
+	data.append('', s);
+
+	var config = {
+		method: 'post',
+		url: `${host}/api/v1/files`,
+		headers: {
 			...data.getHeaders()
 		},
 		data : data
