@@ -5,14 +5,38 @@ var path = require('path');
 var querystring= require('querystring');
 const string2fileStream = require('string-to-file-stream');
 
-exports.upfile = function(host, fname, res) {
+exports.login = function(host, password, res) {
+	var data = JSON.stringify({
+	  "password": password
+	});
+
+	var config = {
+	  method: 'post',
+	  url: `${host}/api/v1/login`,
+	  headers: {
+	      'Content-Type': 'application/json'
+	    },
+	  data : data
+	};
+
+	axios(config)
+	.then(res)
+	.catch(function (error) {
+		throw new Error(error)
+	});
+
+};
+
+exports.upfile = function(host, fname, jwt, res) {
 	var data = new FormData();
 	data.append('', fs.createReadStream(fname));
+
 
 	var config = {
 		method: 'post',
 		url: `${host}/api/v1/files`,
 		headers: {
+			Authorization: `Bearer ${jwt}`,
 			...data.getHeaders()
 		},
 		data : data
@@ -55,7 +79,7 @@ function getAllFiles(dirPath, originalPath, originalPath2, arrayOfFiles) {
 	return arrayOfFiles
 }
 
-exports.upfolder = function(host, fpath, res) {
+exports.upfolder = function(host, fpath, jwt, res) {
 
 	originalPath = path.resolve(fpath, "..")
 	ofolder = path.relative(originalPath, path.join(fpath, "/"))
@@ -71,6 +95,7 @@ exports.upfolder = function(host, fpath, res) {
 		url: `${host}/api/v1/folder`,
 		headers: { 
 			folder: ofolder,
+			Authorization: `Bearer ${jwt}`,
 			...data.getHeaders()
 		},
 		data : data
