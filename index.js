@@ -93,7 +93,8 @@ exports.upfolder = function(host, fpath, jwt, res) {
 	var config = {
 		method: 'post',
 		url: `${host}/api/v1/folder`,
-		headers: { 
+        maxBodyLength: Infinity,
+		headers: {
 			folder: ofolder,
 			Authorization: `Bearer ${jwt}`,
 			...data.getHeaders()

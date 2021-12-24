@@ -12,6 +12,11 @@ npm install InitialWorldTeam/storage-api
 ```
 var api = require('storage-api')
 
+api.login("http://localhost:3000", "password",(res) =>{
+    console.log(res.data.data);
+})
+
+
 // upload file
 api.upfile("http://localhost:3000", "./test/1.txt", (response) => {
 	console.log(JSON.stringify(response.data));
