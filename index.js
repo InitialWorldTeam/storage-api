@@ -113,8 +113,8 @@ exports.upfolder = function(host, fpath, jwt, res) {
 		});
 }
 
-exports.upDataAsFile = function(host, fname, jsdata, res) {
-	let result = querystring.stringify(jsdata);
+exports.upDataAsFile = function(host, fname, jsdata, jwt, res) {
+	let result = JSON.stringify(jsdata);
 	let s = string2fileStream(result, {path:fname});
 	let data = new FormData();
 	data.append('', s);
@@ -123,6 +123,7 @@ exports.upDataAsFile = function(host, fname, jsdata, res) {
 		method: 'post',
 		url: `${host}/api/v1/files`,
 		headers: {
+			Authorization: `Bearer ${jwt}`,
 			...data.getHeaders()
 		},
 		data : data,
@@ -136,3 +137,4 @@ exports.upDataAsFile = function(host, fname, jsdata, res) {
 			throw new Error(error)
 		});
 }
+
