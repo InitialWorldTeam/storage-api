@@ -10,7 +10,7 @@ npm install InitialWorldTeam/storage-api
 ## usage
 
 ```
-var api = require('storage-api')
+let api = require('storage-api')
 
 api.login("http://localhost:3000", "password",(res) =>{
     console.log(res.data.data);

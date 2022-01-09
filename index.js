@@ -1,16 +1,16 @@
-var axios = require('axios');
-var FormData = require('form-data');
-var fs = require('fs');
-var path = require('path');
-var querystring= require('querystring');
+let axios = require('axios');
+let FormData = require('form-data');
+let fs = require('fs');
+let path = require('path');
+let querystring= require('querystring');
 const string2fileStream = require('string-to-file-stream');
 
 exports.login = function(host, password, res) {
-	var data = JSON.stringify({
+	let data = JSON.stringify({
 	  "password": password
 	});
 
-	var config = {
+	let config = {
 	  method: 'post',
 	  url: `${host}/api/v1/login`,
 	  headers: {
@@ -28,18 +28,20 @@ exports.login = function(host, password, res) {
 };
 
 exports.upfile = function(host, fname, jwt, res) {
-	var data = new FormData();
+	let data = new FormData();
 	data.append('', fs.createReadStream(fname));
 
 
-	var config = {
+	let config = {
 		method: 'post',
 		url: `${host}/api/v1/files`,
 		headers: {
 			Authorization: `Bearer ${jwt}`,
 			...data.getHeaders()
 		},
-		data : data
+		data : data,
+		maxContentLength: Infinity,
+		maxBodyLength: Infinity
 	};
 
 	axios(config)
@@ -85,12 +87,12 @@ exports.upfolder = function(host, fpath, jwt, res) {
 	ofolder = path.relative(originalPath, path.join(fpath, "/"))
 
 	let files = getAllFiles(fpath)
-	var data = new FormData();
+	let data = new FormData();
 	for (file of files) {
 		data.append(file.folder2, fs.createReadStream(file.path));
 	}
 
-	var config = {
+	let config = {
 		method: 'post',
 		url: `${host}/api/v1/folder`,
         maxBodyLength: Infinity,
@@ -99,7 +101,9 @@ exports.upfolder = function(host, fpath, jwt, res) {
 			Authorization: `Bearer ${jwt}`,
 			...data.getHeaders()
 		},
-		data : data
+		data : data,
+		maxContentLength: Infinity,
+		maxBodyLength: Infinity
 	};
 
 	axios(config)
@@ -112,16 +116,18 @@ exports.upfolder = function(host, fpath, jwt, res) {
 exports.upDataAsFile = function(host, fname, jsdata, res) {
 	let result = querystring.stringify(jsdata);
 	let s = string2fileStream(result, {path:fname});
-	var data = new FormData();
+	let data = new FormData();
 	data.append('', s);
 
-	var config = {
+	let config = {
 		method: 'post',
 		url: `${host}/api/v1/files`,
 		headers: {
 			...data.getHeaders()
 		},
-		data : data
+		data : data,
+		maxContentLength: Infinity,
+		maxBodyLength: Infinity
 	};
 
 	axios(config)
