@@ -5,29 +5,24 @@ let path = require('path');
 let querystring= require('querystring');
 const string2fileStream = require('string-to-file-stream');
 
-exports.login = function(host, password, res) {
+exports.login = async function(host, password, res) {
 	let data = JSON.stringify({
-	  "password": password
+		"password": password
 	});
 
 	let config = {
-	  method: 'post',
-	  url: `${host}/api/v1/login`,
-	  headers: {
-	      'Content-Type': 'application/json'
-	    },
-	  data : data
+		method: 'post',
+		url: `${host}/api/v1/login`,
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		data : data
 	};
 
-	axios(config)
-	.then(res)
-	.catch(function (error) {
-		throw new Error(error)
-	});
-
+	return axios(config);
 };
 
-exports.upfile = function(host, fname, jwt, res) {
+exports.upfile = async function(host, fname, jwt, res) {
 	let data = new FormData();
 	data.append('', fs.createReadStream(fname));
 
@@ -44,11 +39,7 @@ exports.upfile = function(host, fname, jwt, res) {
 		maxBodyLength: Infinity
 	};
 
-	axios(config)
-		.then(res)
-		.catch(function (error) {
-			throw new Error(error)
-		});
+	return axios(config);
 }
 
 
@@ -81,7 +72,7 @@ function getAllFiles(dirPath, originalPath, originalPath2, arrayOfFiles) {
 	return arrayOfFiles
 }
 
-exports.upfolder = function(host, fpath, jwt, res) {
+exports.upfolder = async function(host, fpath, jwt, res) {
 
 	originalPath = path.resolve(fpath, "..")
 	ofolder = path.relative(originalPath, path.join(fpath, "/"))
@@ -95,7 +86,7 @@ exports.upfolder = function(host, fpath, jwt, res) {
 	let config = {
 		method: 'post',
 		url: `${host}/api/v1/folder`,
-        maxBodyLength: Infinity,
+		maxBodyLength: Infinity,
 		headers: {
 			folder: ofolder,
 			Authorization: `Bearer ${jwt}`,
@@ -106,14 +97,10 @@ exports.upfolder = function(host, fpath, jwt, res) {
 		maxBodyLength: Infinity
 	};
 
-	axios(config)
-		.then(res)
-		.catch(function (error) {
-			throw new Error(error)
-		});
+	return axios(config);
 }
 
-exports.upDataAsFile = function(host, fname, jsdata, jwt, res) {
+exports.upDataAsFile = async function(host, fname, jsdata, jwt, res) {
 	let result = JSON.stringify(jsdata);
 	let s = string2fileStream(result, {path:fname});
 	let data = new FormData();
@@ -131,10 +118,6 @@ exports.upDataAsFile = function(host, fname, jsdata, jwt, res) {
 		maxBodyLength: Infinity
 	};
 
-	axios(config)
-		.then(res)
-		.catch(function (error) {
-			throw new Error(error)
-		});
+	return axios(config);
 }
 
