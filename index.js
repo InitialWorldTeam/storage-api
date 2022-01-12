@@ -5,7 +5,7 @@ let path = require('path');
 let querystring= require('querystring');
 const string2fileStream = require('string-to-file-stream');
 
-exports.login = async function(host, password, res) {
+exports.login = async function(host, password) {
 	let data = JSON.stringify({
 		"password": password
 	});
@@ -22,7 +22,7 @@ exports.login = async function(host, password, res) {
 	return axios(config);
 };
 
-exports.upfile = async function(host, fname, jwt, res) {
+exports.upfile = async function(host, fname, jwt) {
 	let data = new FormData();
 	data.append('', fs.createReadStream(fname));
 
@@ -72,7 +72,7 @@ function getAllFiles(dirPath, originalPath, originalPath2, arrayOfFiles) {
 	return arrayOfFiles
 }
 
-exports.upfolder = async function(host, fpath, jwt, res) {
+exports.upfolder = async function(host, fpath, jwt) {
 
 	originalPath = path.resolve(fpath, "..")
 	ofolder = path.relative(originalPath, path.join(fpath, "/"))
@@ -100,7 +100,7 @@ exports.upfolder = async function(host, fpath, jwt, res) {
 	return axios(config);
 }
 
-exports.upDataAsFile = async function(host, fname, jsdata, jwt, res) {
+exports.upDataAsFile = async function(host, fname, jsdata, jwt) {
 	let result = JSON.stringify(jsdata);
 	let s = string2fileStream(result, {path:fname});
 	let data = new FormData();
